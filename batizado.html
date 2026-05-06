@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>XXXVII Batizado Luta de Libertação - Galeria de Fotos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Desabilitar zoom completamente */
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            touch-action: pan-x pan-y;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -ms-touch-action: pan-x pan-y;
+        }
+
+        /* Estilos específicos para a galeria */
+        .batizado-section {
+            min-height: 100vh;
+            padding: var(--spacing-2xl) 0;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+        }
+
+        .batizado-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+            animation: fadeInDown 0.8s ease-in-out;
+        }
+
+        .batizado-header h1 {
+            font-size: 3rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .batizado-header p {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-xl);
+        }
+
+        /* Galeria em Grid */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: pointer;
+            animation: fadeIn 0.5s ease-in-out;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            background: var(--color-bg-secondary);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+            -webkit-user-select: none;
+            user-select: none;
+            transition: opacity var(--transition-base);
+        }
+
+        .gallery-item:hover img {
+            opacity: 0.9;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 168, 255, 0.2);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            z-index: 5;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-item::after {
+            content: '🔍';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            z-index: 10;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover {
+            color: var(--color-yellow);
+            transform: scale(1.2);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 15px 20px;
+            user-select: none;
+            transition: all var(--transition-base);
+            background: rgba(0, 168, 255, 0.3);
+            border-radius: 5px;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(0, 168, 255, 0.7);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        /* Filtro de fotos */
+        .gallery-filter {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 2px solid var(--color-blue);
+            background: transparent;
+            color: var(--color-text-light);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-base);
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            color: var(--color-bg-dark);
+            border-color: transparent;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .batizado-header h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: var(--spacing-sm);
+            }
+
+            .lightbox-nav {
+                font-size: 1.5rem;
+                padding: 10px 15px;
+            }
+
+            .lightbox-close {
+                top: -35px;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .batizado-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <span class="logo-text">CAPOEIRA</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#hero" class="nav-link">Início</a></li>
+                <li><a href="index.html#campeonatos" class="nav-link">Campeonatos</a></li>
+                <li><a href="index.html#sobre" class="nav-link">Sobre</a></li>
+                <li><a href="index.html#alunos" class="nav-link">Alunos</a></li>
+                <li><a href="index.html#habilidades" class="nav-link">Habilidades</a></li>
+                <li><a href="batizado.html" class="nav-link">Batizado</a></li>
+                <li><a href="index.html#contato" class="nav-link">Contato</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Batizado Section -->
+    <section class="batizado-section">
+        <div class="container">
+            <div class="batizado-header">
+                <h1>XXXVII Batizado Luta de Libertação</h1>
+                <p>Momentos inesquecíveis do nosso evento, celebrando a tradição da Capoeira e o batismo de novos capoeiristas em nossa comunidade.</p>
+            </div>
+
+            <!-- Filtro de Fotos -->
+            <div class="gallery-filter">
+                <button class="filter-btn active" data-filter="all">Todas as Fotos</button>
+                <button class="filter-btn" data-filter="jpg">Fotos</button>
+                <button class="filter-btn" data-filter="mp4">Vídeos</button>
+            </div>
+
+            <!-- Galeria -->
+            <div class="gallery-container" id="gallery">
+                <!-- Imagens serão carregadas dinamicamente via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <img src="" alt="Imagem em zoom" class="lightbox-image" id="lightboxImage">
+            <div class="lightbox-counter">
+                <span id="currentImage">1</span> / <span id="totalImages">1</span>
+            </div>
+            <span class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</span>
+            <span class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">&#10095;</span>
+        </div>
+    </div>
+
+    <script>
+        // Lista de imagens do evento
+        const images = [
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_143640.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_143646.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_143653.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_143855.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_143938.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_144021.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_144024.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_144344.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150229.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150314.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150339.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150351.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150405.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150448.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150613.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150625.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150628.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150631.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150704.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150741.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150748.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150753.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150802.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150807.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150811.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150816.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150820.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150835.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150840.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_150902.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152251.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152254.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152300.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152304.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152311.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152850.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152853.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152855.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152857.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152936.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152944.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_152946.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153244.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153255.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153307.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153318.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153357.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153511.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153522.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_153538.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_154345.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_154420.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160118.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160120.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160122.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160207.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160316.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160350.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160421.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160422.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160423.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160453.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160454.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160546.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160549.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160550.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160618.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160619.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160640.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160717.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160718.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160823.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160855.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160910.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160921.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160931.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_160932.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162712.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162746.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162824.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162902.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162903.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162929.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162952.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_162953.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163007.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163013.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163037.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163039.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163216.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163221.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163232.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163233.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163234.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163250.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163252.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163306.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163308.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163442.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163444.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163453.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_163455.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_165035.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_165037.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_165049.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_165051.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_165224.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_165556.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_171656.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_171657.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_172317.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_172411.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240727_172412.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_111348.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_111400.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_111405.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_111447.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130251.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130254.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130258.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130300.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130313.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130317.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130318.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130322.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130327.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130330.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130344.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_130539.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_132318.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_132319.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_132322.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_132323.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_132324.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_132325.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_133227.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_153440.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_153601.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_153608.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_153610.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_160401.jpg',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_171438.jpg'
+        ];
+
+        const videos = [
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_125733.mp4',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_125911.mp4',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_131727.mp4',
+            'Capoeira/XXXVII Batizado Luta de Libertação/20240728_160346.mp4'
+        ];
+
+        let currentLightboxIndex = 0;
+        let filteredImages = [...images];
+        let currentFilter = 'all';
+
+        // Carregar galeria
+        function loadGallery(itemsToShow) {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            itemsToShow.forEach((img, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `<img src="${img}" alt="Foto ${index + 1}" loading="lazy">`;
+                item.onclick = () => openLightbox(index, itemsToShow);
+                gallery.appendChild(item);
+            });
+
+            // Atualizar contador total
+            document.getElementById('totalImages').textContent = itemsToShow.length;
+        }
+
+        // Abrir lightbox
+        function openLightbox(index, itemsToShow) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            
+            currentLightboxIndex = index;
+            filteredImages = itemsToShow;
+            
+            lightboxImage.src = itemsToShow[index];
+            document.getElementById('currentImage').textContent = index + 1;
+            document.getElementById('totalImages').textContent = itemsToShow.length;
+            
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fechar lightbox
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Navegar entre imagens no lightbox
+        function changeLightboxImage(direction) {
+            let newIndex = currentLightboxIndex + direction;
+            
+            if (newIndex >= filteredImages.length) {
+                newIndex = 0;
+            } else if (newIndex < 0) {
+                newIndex = filteredImages.length - 1;
+            }
+            
+            currentLightboxIndex = newIndex;
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = filteredImages[newIndex];
+            document.getElementById('currentImage').textContent = newIndex + 1;
+        }
+
+        // Configurar filtros
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                let itemsToShow = [];
+
+                if (filter === 'all') {
+                    itemsToShow = [...images, ...videos];
+                } else if (filter === 'jpg') {
+                    itemsToShow = [...images];
+                } else if (filter === 'mp4') {
+                    itemsToShow = [...videos];
+                }
+
+                loadGallery(itemsToShow);
+            });
+        });
+
+        // Fechar lightbox ao clicar fora
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Navegar com teclado
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+                if (e.key === 'ArrowRight') changeLightboxImage(1);
+                if (e.key === 'Escape') closeLightbox();
+            }
+        });
+
+        // Carregar galeria ao inicializar
+        loadGallery([...images, ...videos]);
+    </script>
+</body>
+</html>
