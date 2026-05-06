@@ -1183,3 +1183,8 @@ p {
         font-size: 1.4rem;
     }
 }
+
+.container-biografico {
+    position: relative;
+    background-image: url('https://i.imgur.com/8nXol7X.jpg');
+}
