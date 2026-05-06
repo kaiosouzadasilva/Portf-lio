@@ -49,10 +49,6 @@
 
 html {
     scroll-behavior: smooth;
-    touch-action: pan-x pan-y;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
 }
 
 body {
@@ -61,9 +57,6 @@ body {
     color: var(--color-text-light);
     line-height: 1.6;
     overflow-x: hidden;
-    touch-action: pan-x pan-y;
-    -webkit-user-select: none;
-    user-select: none;
 }
 
 ::-webkit-scrollbar {
@@ -1026,7 +1019,7 @@ p {
 }
 
 /* ============================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE - TABLET (768px e abaixo)
    ============================================ */
 @media (max-width: 768px) {
     :root {
@@ -1042,21 +1035,41 @@ p {
         font-size: 2rem;
     }
 
+    section {
+        padding: var(--spacing-xl) 0;
+    }
+
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+
     /* Navbar Mobile */
+    .navbar {
+        padding: var(--spacing-sm) 0;
+    }
+
+    .navbar-container {
+        padding: 0 var(--spacing-md);
+    }
+
     .hamburger {
         display: flex;
+        z-index: 500;
     }
 
     .nav-menu {
-        position: absolute;
+        position: fixed;
         top: 70px;
         left: -100%;
         flex-direction: column;
         background: var(--color-bg-secondary);
         width: 100%;
+        height: calc(100vh - 70px);
         text-align: center;
         transition: 0.3s;
         gap: 0;
+        overflow-y: auto;
+        z-index: 999;
     }
 
     .nav-menu.active {
@@ -1068,33 +1081,94 @@ p {
         border-bottom: 1px solid rgba(0, 168, 255, 0.1);
     }
 
+    .nav-menu li:last-child {
+        padding-bottom: var(--spacing-lg);
+    }
+
     /* Hero Mobile */
+    .hero {
+        min-height: auto;
+        padding: var(--spacing-xl) 0;
+        padding-left: 0;
+    }
+
     .hero-content {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
+        padding: 0 var(--spacing-md);
     }
 
     .hero-title {
         font-size: 2rem;
+        line-height: 1.2;
     }
 
     .hero-subtitle {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
     }
 
     .hero-buttons {
         flex-direction: column;
+        gap: var(--spacing-md);
     }
 
     .btn {
         width: 100%;
         text-align: center;
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: 1rem;
+    }
+
+    .btn-large {
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .image-placeholder {
+        max-width: 300px;
+    }
+
+    /* Slideshow Mobile */
+    .slideshow-btn {
+        padding: 12px 15px;
+        font-size: 1.2rem;
+    }
+
+    .slideshow-dots {
+        bottom: 15px;
+        gap: 8px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* Campeonatos Mobile */
+    .campeonatos-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .biography-section {
+        order: 2;
+    }
+
+    .championships-grid {
+        order: 1;
     }
 
     /* Sobre Mobile */
     .sobre-content {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
+    }
+
+    .sobre-text p {
+        font-size: 1rem;
     }
 
     /* Habilidades Mobile */
@@ -1107,64 +1181,8 @@ p {
         grid-template-columns: 1fr;
     }
 
-    /* Galeria Mobile */
-    .media-grid {
-        grid-template-columns: 1fr;
-    }
-
-    /* Contato Mobile */
-    .contato-content {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-lg);
-    }
-
-    .social-buttons {
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    }
-
-    .social-btn {
-        width: 50px;
-        height: 50px;
-    }
-
-    .social-btn svg {
-        width: 25px;
-        height: 25px;
-    }
-}
-
-@media (max-width: 480px) {
-    :root {
-        --spacing-lg: 1.5rem;
-        --spacing-md: 1rem;
-    }
-
-    h1 {
-        font-size: 1.8rem;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    h3 {
-        font-size: 1.2rem;
-    }
-
-    section {
-        padding: var(--spacing-lg) 0;
-    }
-
-    .hero-title {
-        font-size: 1.6rem;
-    }
-
-    .hero-description {
-        font-size: 0.95rem;
-    }
-
-    .container {
-        padding: 0 var(--spacing-sm);
+    .column-title {
+        font-size: 1.3rem;
     }
 
     .skill-card {
@@ -1175,12 +1193,408 @@ p {
         font-size: 2rem;
     }
 
+    /* Alunos Mobile */
+    .alunos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    /* Galeria Mobile */
+    .media-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .media-card,
+    .alunos-card {
+        padding: var(--spacing-md);
+    }
+
+    /* Contato Mobile */
+    .contato-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
     .cta-box {
         padding: var(--spacing-lg);
     }
 
     .cta-box h3 {
+        font-size: 1.5rem;
+    }
+
+    .social-links h3 {
+        font-size: 1.3rem;
+    }
+
+    .social-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: var(--spacing-md);
+    }
+
+    .social-btn {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+    }
+
+    .social-btn svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* ============================================
+   RESPONSIVIDADE - MOBILE (480px e abaixo)
+   ============================================ */
+@media (max-width: 480px) {
+    :root {
+        --spacing-lg: 1.5rem;
+        --spacing-md: 1rem;
+        --spacing-sm: 0.75rem;
+    }
+
+    html {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    h2 {
         font-size: 1.4rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    section {
+        padding: var(--spacing-lg) 0;
+    }
+
+    .container {
+        padding: 0 var(--spacing-sm);
+        max-width: 100%;
+    }
+
+    .section-title {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .section-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    /* Navbar Mobile Ultra */
+    .navbar {
+        padding: 0.75rem 0;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .nav-menu li {
+        padding: var(--spacing-md) 0;
+    }
+
+    .hamburger span {
+        width: 22px;
+        height: 2.5px;
+    }
+
+    /* Hero Mobile Ultra */
+    .hero {
+        min-height: 70vh;
+        padding: var(--spacing-lg) 0;
+    }
+
+    .hero-content {
+        gap: var(--spacing-md);
+        padding: 0 var(--spacing-sm);
+    }
+
+    .hero-title {
+        font-size: 1.4rem;
+        line-height: 1.3;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .hero-description {
+        font-size: 0.85rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-secondary {
+        border-width: 1.5px;
+    }
+
+    .image-placeholder {
+        max-width: 250px;
+        aspect-ratio: 1;
+    }
+
+    /* Slideshow Mobile Ultra */
+    .slideshow-btn {
+        padding: 10px 12px;
+        font-size: 1rem;
+        left: 10px !important;
+        right: auto !important;
+    }
+
+    .slideshow-btn.next {
+        left: auto !important;
+        right: 10px !important;
+    }
+
+    .slideshow-dots {
+        bottom: 12px;
+        gap: 6px;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    /* Campeonatos Mobile Ultra */
+    .campeonatos-content {
+        gap: var(--spacing-md);
+    }
+
+    .biography-section h3,
+    .championship-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .biography-section p {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .championship-card {
+        padding: var(--spacing-md);
+    }
+
+    .championship-icon {
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .championship-label {
+        font-size: 0.8rem;
+    }
+
+    .championship-card p {
+        font-size: 0.85rem;
+    }
+
+    /* Sobre Mobile Ultra */
+    .sobre-content {
+        gap: var(--spacing-md);
+    }
+
+    .sobre-text p {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .highlight-card {
+        padding: var(--spacing-md);
+    }
+
+    .journey-list {
+        gap: var(--spacing-sm);
+    }
+
+    .journey-list li {
+        font-size: 0.9rem;
+        gap: var(--spacing-sm);
+    }
+
+    .badge {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        min-width: 70px;
+    }
+
+    /* Habilidades Mobile Ultra */
+    .skills-grid {
+        gap: var(--spacing-md);
+    }
+
+    .column-title {
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .skills-list {
+        gap: var(--spacing-sm);
+    }
+
+    .skill-card {
+        padding: var(--spacing-md);
+    }
+
+    .skill-icon {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .skill-card h4 {
+        font-size: 0.95rem;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .skill-card p {
+        font-size: 0.8rem;
+    }
+
+    /* Alunos Mobile Ultra */
+    .alunos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--spacing-sm);
+    }
+
+    .alunos-card {
+        padding: var(--spacing-sm);
+    }
+
+    .video-placeholder {
+        gap: var(--spacing-sm);
+    }
+
+    .video-placeholder svg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .video-placeholder p {
+        font-size: 0.8rem;
+    }
+
+    /* Galeria Mobile Ultra */
+    .media-grid {
+        gap: var(--spacing-sm);
+    }
+
+    .media-card {
+        padding: var(--spacing-sm);
+    }
+
+    .media-placeholder {
+        gap: var(--spacing-sm);
+    }
+
+    .media-placeholder svg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .media-placeholder p {
+        font-size: 0.8rem;
+    }
+
+    /* Contato Mobile Ultra */
+    .contato-content {
+        gap: var(--spacing-md);
+    }
+
+    .cta-box {
+        padding: var(--spacing-md);
+    }
+
+    .cta-box h3 {
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .cta-box p {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .social-links h3 {
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .social-buttons {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-sm);
+    }
+
+    .social-btn {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+    }
+
+    .social-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ============================================
+   RESPONSIVIDADE - EXTRA PEQUENO (320px)
+   ============================================ */
+@media (max-width: 320px) {
+    html {
+        font-size: 12px;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .hero-title {
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .social-buttons {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
