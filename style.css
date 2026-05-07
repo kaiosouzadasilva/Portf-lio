@@ -831,6 +831,7 @@ p {
 
 .biography-section p {
         text-align: justify; /* Deixa o texto mais alinhado e organizado */
+        
 }
 
 /*. Criando a camada da imagem de fundo */
@@ -876,7 +877,11 @@ p {
     gap: var(--spacing-lg);
     animation: fadeInRight 0.8s ease-in-out;
     grid-column: 1 / -1; /* Faz a seção ocupar toda a largura da grade */
+    max-width: 30000px; /* Limita a largura máxima para evitar que fique muito esticado em telas grandes */
+    margin-left:auto;
+    margin-right:auto;
     width: 100%; /* Garante que a seção ocupe toda a largura disponível */
+
 }
 
 .championship-card {
