@@ -263,6 +263,10 @@ p {
     height: 100%;
     opacity: 0;
     transition: opacity var(--transition-slow);
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .slide.active {
@@ -348,14 +352,14 @@ p {
    HERO SECTION
    ============================================ */
 .hero {
-    min-height: 100vh;
+    height: 1500px; /* Altere para a altura que você achar melhor */
+    min-height: auto; /* Remove a dependência da altura da tela */
     display: flex;
-    align-items: center;
-    padding: var(--spacing-2xl) 0;
+    align-items: center;  /*  */
+    padding: var(--spacing-4x2) 0; /* Aumenta o espaçamento vertical para acomodar o conteúdo */
     background: linear-gradient(135deg, rgba(0, 168, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
     position: relative;
     overflow: hidden;
-    padding-left: 60px;
 }
 
 .hero::before {
@@ -805,10 +809,43 @@ p {
 }
 
 .biography-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    animation: fadeInLeft 0.8s ease-in-out;
+    position: relative; /* Necessário para posicionar a imagem atrás */
+    z-index: 1;         /* Garante que o texto fique na frente */
+    padding: var(--spacing-lg); /* Dá um respiro para a imagem aparecer nas bordas */
+    background: rgba(45, 45, 45, 0.6); /* Um fundo escuro bem leve para ajudar no contraste */
+    border-radius: 40px 60px 40px 60px; /* Borda arredondada mais pronunciada */
+    overflow: hidden;   /* Garante que a imagem não saia das bordas arredondadas */
+    grid-column: 1 / -1; /* Faz a seção ocupar toda a largura da grade */
+    width: 100%; /* Garante que a seção ocupe toda a largura disponível */
+    color: var(--color-text); /* Cor clara para o texto */
+}
+
+.biography-section p {
+        text-align: justify; /* Deixa o texto mais alinhado e organizado */
+}
+
+/*. Criando a camada da imagem de fundo */
+.biography-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Usando a última imagem que você mencionou */
+    background-image: url('Capoeira/IMG-20250831-WA0037.jpg'); 
+    
+    /* Aqui resolvemos o problema dos pixels: */
+    background-size: cover;      /* A imagem estica para preencher tudo sem sobrar espaço */
+    background-position: center; /* Centraliza a parte mais importante da foto */
+    background-repeat: no-repeat;
+    
+    /* Controle de transparência (0.1 é 10%, bem sutil) */
+    opacity: 0.50; 
+    
+    z-index: -1; /* Joga a imagem para trás de tudo */
+    /* filter: grayscale(30%); Opcional: deixa a foto levemente cinza para não brigar com as cores do texto */
 }
 
 .biography-section h3 {
@@ -829,6 +866,8 @@ p {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
     animation: fadeInRight 0.8s ease-in-out;
+    grid-column: 1 / -1; /* Faz a seção ocupar toda a largura da grade */
+    width: 100%; /* Garante que a seção ocupe toda a largura disponível */
 }
 
 .championship-card {
