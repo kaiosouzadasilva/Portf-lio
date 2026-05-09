@@ -45,34 +45,50 @@
             margin: 0 auto var(--spacing-xl);
         }
 
-        /* Galeria em Grid */
+        /* Galeria em Grid responsivo - Estilo Google Fotos */
         .gallery-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--spacing-md);
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
             margin-bottom: var(--spacing-2xl);
-            auto-rows: max-content;
+            grid-auto-rows: 200px;
+            grid-auto-flow: dense;
         }
 
         .gallery-item {
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             animation: fadeIn 0.5s ease-in-out;
             background: var(--color-bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Variar tamanho de algumas imagens para criar efeito masonry */
+        .gallery-item:nth-child(3n) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .gallery-item:nth-child(5n) {
+            grid-column: span 1;
+            grid-row: span 1;
         }
 
         .gallery-item img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             display: block;
             pointer-events: none;
-            transition: opacity var(--transition-base);
+            transition: transform var(--transition-base);
         }
 
         .gallery-item:hover img {
-            opacity: 0.9;
+            transform: scale(1.05);
         }
 
         .gallery-item::before {
@@ -246,7 +262,9 @@
         /* Responsividade */
         @media (max-width: 1024px) {
             .gallery-container {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 6px;
+                grid-auto-rows: 180px;
             }
         }
 
@@ -261,7 +279,9 @@
             }
 
             .gallery-container {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 4px;
+                grid-auto-rows: 120px;
                 gap: var(--spacing-sm);
             }
 
@@ -315,7 +335,8 @@
 
             .gallery-container {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                gap: 0.5rem;
+                gap: 3px;
+                grid-auto-rows: 100px;
                 margin-bottom: var(--spacing-lg);
             }
 
@@ -382,7 +403,8 @@
 
             .gallery-container {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                gap: 0.4rem;
+                gap: 2px;
+                grid-auto-rows: 80px;
             }
 
             .filter-btn {
