@@ -61,7 +61,26 @@ if (hamburger) {
 // Fechar menu ao clicar em um link
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
+        // Se for o dropdown, não fechar o menu
+        if (link.textContent.includes('Preferências')) {
+            e.preventDefault();
+            const dropdown = link.parentElement;
+            dropdown.classList.toggle('active');
+        } else {
+            navMenu.classList.remove('active');
+        }
+    });
+});
+
+// Fechar dropdown quando clicar em preferências
+const prefButtons = document.querySelectorAll('.pref-btn');
+prefButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const dropdown = btn.closest('.dropdown');
+        if (dropdown) {
+            dropdown.classList.remove('active');
+        }
         navMenu.classList.remove('active');
     });
 });

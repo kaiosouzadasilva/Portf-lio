@@ -1253,6 +1253,34 @@ p {
         padding-bottom: var(--spacing-lg);
     }
 
+    /* Dropdown Mobile */
+    .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        background: var(--bg-secondary);
+        border: none;
+        margin-top: 0;
+        width: 100%;
+    }
+
+    .dropdown:hover .dropdown-content,
+    .dropdown.active .dropdown-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dropdown > .nav-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pref-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
     /* Hero Mobile */
     .hero {
         min-height: auto;
