@@ -1,4 +1,52 @@
 // ============================================
+// CONTROLE DE TEMA (CLARO/ESCURO)
+// ============================================
+const btnLight = document.getElementById('btn-light');
+const btnDark = document.getElementById('btn-dark');
+
+if (btnLight) {
+    btnLight.addEventListener('click', () => {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+    });
+}
+
+if (btnDark) {
+    btnDark.addEventListener('click', () => {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    });
+}
+
+// Carregar tema salvo ao inicializar
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+});
+
+// ============================================
+// CONTROLE DE IDIOMAS
+// ============================================
+function changeLanguage(lang) {
+    localStorage.setItem('language', lang);
+    
+    if (lang === 'en') {
+        // Redirecionar para versão em inglês (quando disponível)
+        alert('🇺🇸 English version coming soon!');
+        // Descomentar quando index_en.html estiver pronto:
+        // window.location.href = 'index_en.html';
+    } else if (lang === 'pt') {
+        // Redirecionar para versão em português
+        alert('🇧🇷 Permanecendo em Português-Brasileiro');
+        // window.location.href = 'index.html';
+    }
+}
+
+// ============================================
 // MENU MOBILE
 // ============================================
 const hamburger = document.querySelector('.hamburger');
